@@ -37,7 +37,12 @@ body {
     top: 40px;
     right: 10px;
     cursor:pointer;
+    border: unset;
     
+}
+
+.addButton:hover {
+    background-color: rgb(110, 153, 221);
 }
 
 .configFolderPopup {
@@ -89,12 +94,12 @@ body {
     height: 32px;
     width: 191px;
     border-radius: inherit;
-    background-color: white;
-    color: grey;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e6f3ff;
+    color: #6e99dd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 20px;
-    border: unset;
-    /*box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;*/
+    border: solid;
+    border-color: #6e99dd;
     cursor: pointer;
 }
 
@@ -114,6 +119,21 @@ body {
     cursor: pointer;
 
 }
+
+.noTaskPromptDiv{
+    width: 554px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: unset;
+    border-radius: 25px;
+}
+
+.prompt {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 
 .folderSection {
     height: 400px;
