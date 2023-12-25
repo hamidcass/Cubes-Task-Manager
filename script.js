@@ -12,7 +12,7 @@ const folderTextField = document.querySelector(".folderName");
 
 var numFolders = 0;
 var allFolders = [];
-var allFolderNames = [];
+var allFolderNames = []; //not needed anymore
 
 
 
@@ -106,7 +106,7 @@ function addFolder() {
             
             let newTaskValue = newTask.value;
             let index = allTasks.indexOf(oldTaskValue);
-            console.log("Value: [" + newTask.value + "] Index: " + index)
+            //console.log("Value: [" + newTask.value + "] Index: " + index)
             oldTaskValue = newTaskValue;
             
 
@@ -132,15 +132,33 @@ function addFolder() {
         });
 
 
-
-        //allTasks.push(newTask.value);
-        //console.log(allTasks)
-
-        //TODO: Remove from local memory
+        
         checkBox.addEventListener("change", function() {
             newTask.remove();
             checkBox.remove();
+
+            let i = allTasks.indexOf(newTask.value);
+            console.log(newTask.value)
+            console.log("Index: " + i)
+            allTasks.splice(i,1);
+
+            folderItems = {
+                folder: newFolder, //div of the folder
+                folderName: name.textContent,  //folder name
+                numOfTasks: numTasks-1,
+                taskList: allTasks
+
+                
+            }
+
+            console.log("NumTasks: " + folderItems.numOfTasks);
+
             
+
+            allFolders[thisFolder] = folderItems;
+            let jsonAllFolders = JSON.stringify(allFolders);
+            localStorage.setItem("allFolders", jsonAllFolders);
+
         });
 
         //TODO: Not working in some instances, fix
@@ -193,6 +211,17 @@ setGreetingMessage();
 setInterval(setGreetingMessage, 1000);
 loadData();
 
+//if folder container is not empty
+if(allFolders.length === 0) {
+    console.log("Div folder is empty!")
+    //TODO: put image or text in box to prompt user to make a task
+
+    //clearFolders = document.body.createElement("h3");
+
+} else {
+    //TODO: create remove all tasks button
+}
+
 
 
 function showLoadedFolders() {
@@ -234,7 +263,7 @@ function showLoadedFolders() {
             newTask.placeholder = "Type task here";
             newTask.value = allFolders[i].taskList[j];
 
-            //TODO: add data persitence to the tasks again
+            
     
             let checkBox = document.createElement("input");
             checkBox.type = "checkbox";
@@ -282,6 +311,29 @@ function showLoadedFolders() {
             checkBox.addEventListener("change", function() {
                 newTask.remove();
                 checkBox.remove();
+
+                let i = allTasks.indexOf(newTask.value);
+                console.log(newTask.value)
+                console.log("Index: " + i)
+                allTasks.splice(i,1);
+
+                folderItems = {
+                    folder: newFolder, //div of the folder
+                    folderName: name.textContent,  //folder name
+                    numOfTasks: numTasks-1,
+                    taskList: allTasks
+
+                
+            }
+
+            console.log("NumTasks: " + folderItems.numOfTasks);
+
+            allFolders[thisFolder] = folderItems;
+            let jsonAllFolders = JSON.stringify(allFolders);
+            localStorage.setItem("allFolders", jsonAllFolders);
+
+                
+
             });
     
             document.onkeydown = (event) => {
@@ -387,7 +439,6 @@ function loadData () {
     let folderData = JSON.parse(localStorage.getItem('allFolders'));
     
     //localStorage.clear();
-    console.log(folderData)
     
     if(folderData !== null) {
         showLoadedFolders();
@@ -396,3 +447,5 @@ function loadData () {
         console.log("it is null")
     }
 }
+
+
