@@ -14,6 +14,9 @@ var numFolders = 0;
 var allFolders = [];
 var allFolderNames = []; //not needed anymore
 
+var noTaskPromptDiv;
+var prompt;
+
 
 
 addButton.addEventListener("click", configFolder);
@@ -61,7 +64,13 @@ function configFolder() {
 }
 
 function addFolder() {
-  
+    
+    //remove emptyDivPrompt
+    noTaskPromptDiv.style.visibility = "hidden";
+    noTaskPromptDiv.style.width = "0px";
+    noTaskPromptDiv.style.height = "0px";
+
+
 
     numFolders++;
  
@@ -215,6 +224,16 @@ loadData();
 if(allFolders.length === 0) {
     console.log("Div folder is empty!")
     //TODO: put image or text in box to prompt user to make a task
+    noTaskPromptDiv = document.createElement("div");
+    noTaskPromptDiv.classList.add("noTaskPromptDiv");
+
+    prompt = document.createElement("h4");
+    prompt.classList.add("prompt");
+    prompt.textContent = "Looks like you have no tasks left!";
+
+    noTaskPromptDiv.append(prompt);
+    folderSection.append(noTaskPromptDiv);
+
 
     //clearFolders = document.body.createElement("h3");
 
@@ -438,7 +457,7 @@ function showLoadedFolders() {
 function loadData () {
     let folderData = JSON.parse(localStorage.getItem('allFolders'));
     
-    //localStorage.clear();
+    localStorage.clear();
     
     if(folderData !== null) {
         showLoadedFolders();
