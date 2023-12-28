@@ -172,6 +172,29 @@ body {
     padding-left: 25px;
 }
 
+.deleteFolderButton {
+    border-radius: 50px;
+    float: right;
+    border: unset;
+    height: 30px;
+    width: 30px;
+    right: 0px;
+    margin-right: 20px;
+    font-size: xx-large;
+    display: flex;
+    color: rgb(88, 168, 243);
+    position: relative;
+    top: -60px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
+
+}
+
 .addTaskButton {
     border-radius: 50px;
     float: right;
