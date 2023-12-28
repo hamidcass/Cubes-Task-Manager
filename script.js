@@ -91,6 +91,10 @@ function addFolder() {
     addTaskButton.classList.add("addTaskButton");
     addTaskButton.textContent = "+";
 
+    var deleteFolderButton = document.createElement("button");
+    deleteFolderButton.classList.add("deleteFolderButton");
+    deleteFolderButton.textContent = "-";
+
     addTaskButton.addEventListener("click", function() {
         var newTask = document.createElement("input");
         newTask.classList.add("task");
@@ -132,7 +136,9 @@ function addFolder() {
                 folderName: name.textContent,  //folder name
                 numOfTasks: numTasks,
                 taskList: allTasks
-            };
+            }
+
+            console.log("Hi");
 
             allFolders[thisFolder] = folderItems;
             let jsonAllFolders = JSON.stringify(allFolders);
@@ -156,8 +162,6 @@ function addFolder() {
                 folderName: name.textContent,  //folder name
                 numOfTasks: numTasks-1,
                 taskList: allTasks
-
-                
             }
 
             console.log("NumTasks: " + folderItems.numOfTasks);
@@ -181,12 +185,37 @@ function addFolder() {
                 }
             }
         }
+
+        
         
     });
 
+    deleteFolderButton.addEventListener("click", function() {
+        //remove folder from page and local memory
+        let index = allFolders.indexOf(folderItems);
+        
+        if (index !== -1) {
+            allFolders.splice(index, 1);
+            folderSection.removeChild(newFolder);
 
-    newFolder.appendChild(name);
-    newFolder.appendChild(addTaskButton);
+            //make prompt visible if no folders exist
+            if(allFolders.length === 0) {
+
+                noTaskPromptDiv.style.visibility = "visible";
+                noTaskPromptDiv.style.width = "554px";
+                noTaskPromptDiv.style.height = "70px";
+
+            }
+
+        }
+
+        
+
+    });
+
+    newFolder.append(name);
+    newFolder.append(addTaskButton);
+    newFolder.append(deleteFolderButton);
     folderSection.append(newFolder);
     
     let folderItems = {
@@ -197,7 +226,7 @@ function addFolder() {
     }
 
     allFolders.push(folderItems);
-    console.log(folderItems.folderName)
+    
  
     let jsonNumFolders = JSON.stringify(numFolders);
     let jsonAllFolders = JSON.stringify(allFolders);
@@ -347,9 +376,11 @@ function showLoadedFolders() {
 
             console.log("NumTasks: " + folderItems.numOfTasks);
 
+            
             allFolders[thisFolder] = folderItems;
             let jsonAllFolders = JSON.stringify(allFolders);
             localStorage.setItem("allFolders", jsonAllFolders);
+            
 
                 
 
@@ -430,8 +461,31 @@ function showLoadedFolders() {
                 checkBox.addEventListener("change", function() {
                     newTask.remove();
                     checkBox.remove();
-                    
-                });
+
+                    let i = allTasks.indexOf(newTask.value);
+                    console.log(newTask.value)
+                    console.log("Index: " + i)
+                    allTasks.splice(i,1);
+
+                folderItems = {
+                    folder: newFolder, //div of the folder
+                    folderName: name.textContent,  //folder name
+                    numOfTasks: numTasks-1,
+                    taskList: allTasks
+
+                
+                }
+
+                console.log("NumTasks: " + folderItems.numOfTasks);
+
+            
+
+                allFolders[thisFolder] = folderItems;
+                let jsonAllFolders = JSON.stringify(allFolders);
+                localStorage.setItem("allFolders", jsonAllFolders);
+
+            });
+
         
                 //TODO: Not working in some instances, fix
                 document.onkeydown = (event) => {
