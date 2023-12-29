@@ -14,8 +14,14 @@ var numFolders = 0;
 var allFolders = [];
 var allFolderNames = []; //not needed anymore
 
-var noTaskPromptDiv;
-var prompt;
+
+var noTaskPromptDiv = document.createElement("div");
+noTaskPromptDiv.classList.add("noTaskPromptDiv");
+
+var prompt = document.createElement("h4");
+prompt.classList.add("prompt");
+prompt.textContent = "Looks like you have no tasks left!";
+
 
 
 
@@ -192,11 +198,18 @@ function addFolder() {
 
     deleteFolderButton.addEventListener("click", function() {
         //remove folder from page and local memory
+        numFolders--;
         let index = allFolders.indexOf(folderItems);
         
         if (index !== -1) {
             allFolders.splice(index, 1);
             folderSection.removeChild(newFolder);
+
+            jsonNumFolders = JSON.stringify(numFolders);
+            jsonAllFolders = JSON.stringify(allFolders);
+
+            localStorage.setItem("numFolders", jsonNumFolders);
+            localStorage.setItem("allFolders", jsonAllFolders);
 
             //make prompt visible if no folders exist
             if(allFolders.length === 0) {
@@ -251,15 +264,7 @@ loadData();
 
 //if folder container is not empty
 if(allFolders.length === 0) {
-    console.log("Div folder is empty!")
-    //TODO: put image or text in box to prompt user to make a task
-    noTaskPromptDiv = document.createElement("div");
-    noTaskPromptDiv.classList.add("noTaskPromptDiv");
-
-    prompt = document.createElement("h4");
-    prompt.classList.add("prompt");
-    prompt.textContent = "Looks like you have no tasks left!";
-
+    console.log("All folders is empty")
     noTaskPromptDiv.append(prompt);
     folderSection.append(noTaskPromptDiv);
 
@@ -267,6 +272,7 @@ if(allFolders.length === 0) {
     //clearFolders = document.body.createElement("h3");
 
 } else {
+    console.log(allFolders)
     //TODO: create remove all tasks button
 }
 
@@ -274,14 +280,16 @@ if(allFolders.length === 0) {
 
 function showLoadedFolders() {
 
-    numFolders= 0;
-
+    numFolders = 0;
+    
+   
     let num = localStorage.getItem("numFolders"); //retrieve stored amount of folders from local storage
     allFolders = JSON.parse(localStorage.getItem("allFolders")); //retrive the saved data to be added to screen
        
     //add each folder to the page
     for (let i=0; i<num; i++) {
         
+        let folderPos = i; //holds index of folder in allFolder to manage deletion
         numFolders++;
         let thisFolder = numFolders-1; //used to identify which folder to update in local storage. This value doesn't change
         let allTasks = [];
@@ -299,8 +307,13 @@ function showLoadedFolders() {
         addTaskButton.classList.add("addTaskButton");
         addTaskButton.textContent = "+";
 
-        newFolder.appendChild(name);
-        newFolder.appendChild(addTaskButton);
+        var deleteFolderButton = document.createElement("button");
+        deleteFolderButton.classList.add("deleteFolderButton");
+        deleteFolderButton.textContent = "-";
+
+        newFolder.append(name);
+        newFolder.append(addTaskButton);
+        newFolder.append(deleteFolderButton);
 
         //Adding already made tasks from local memory       
         for(let j = 0; j < allFolders[i].numOfTasks; j++) {
@@ -499,8 +512,40 @@ function showLoadedFolders() {
                     }
                 }
                 
-            });
+        });
+
+        deleteFolderButton.addEventListener("click", function() {
+
+            let index = allFolders.indexOf(folderPos);
+            //remove folder from page and local memory
+            allFolders.splice(index, 1);
+            folderSection.removeChild(newFolder);
+            numFolders--;
+
+            let jsonNumFolders = JSON.stringify(numFolders);
+            let jsonAllFolders = JSON.stringify(allFolders);
+
+            localStorage.setItem("numFolders", jsonNumFolders);
+            localStorage.setItem("allFolders", jsonAllFolders);
+            
+            //make prompt visible if no folders exist
+            if(allFolders.length === 0) {
+    
+                noTaskPromptDiv.style.visibility = "visible";
+                noTaskPromptDiv.style.width = "554px";
+                noTaskPromptDiv.style.height = "70px";
+                noTaskPromptDiv.append(prompt);
+                folderSection.append(noTaskPromptDiv);
+    
+            }
+    
         
+    
+            
+    
+        });
+        
+
         
         folderSection.append(newFolder);
     }
@@ -511,7 +556,8 @@ function showLoadedFolders() {
 function loadData () {
     let folderData = JSON.parse(localStorage.getItem('allFolders'));
     
-    localStorage.clear();
+    //this will reset local storage after every refresh. If this is not commented out it's being used for testing purposes only
+    //localStorage.clear();
     
     if(folderData !== null) {
         showLoadedFolders();
